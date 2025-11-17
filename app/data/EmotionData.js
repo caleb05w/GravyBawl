@@ -1,5 +1,51 @@
 // data/EmotionData.js
-let data = [];
+import { getBaseMetrics } from "./BaseMetrics";
+import { getFinalMetrics, clearFinalMetrics } from "./EmotionMetrics";
+
+const STORAGE_KEY = "bawl-gravy-emotion-data";
+
+// Load from localStorage on initialization
+function loadFromStorage() {
+    if (typeof window === "undefined") return [];
+
+    try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+            return JSON.parse(stored);
+        }
+    } catch (error) {
+        console.error("Error loading emotion data from localStorage:", error);
+    }
+
+    return [];
+}
+
+// Save to localStorage
+function saveToStorage(data) {
+    if (typeof window === "undefined") return;
+
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (error) {
+        console.error("Error saving emotion data to localStorage:", error);
+    }
+}
+
+let data = loadFromStorage();
+
+// Listen for storage changes from other tabs
+if (typeof window !== "undefined") {
+    window.addEventListener("storage", (e) => {
+        if (e.key === STORAGE_KEY && e.newValue !== null) {
+            try {
+                data = JSON.parse(e.newValue);
+                window.dispatchEvent(new Event("data-updated"));
+            } catch (error) {
+                console.error("Error parsing emotion data from storage event:", error);
+            }
+        }
+    });
+}
 
 export function getEmotionalData() {
     return data;
@@ -7,6 +53,7 @@ export function getEmotionalData() {
 
 export function setEmotionalData(newItem) {
     data = [...data, newItem];
+    saveToStorage(data);
     console.log("EmotionalData updated:", data);
 
     if (typeof window !== "undefined") {
@@ -15,8 +62,23 @@ export function setEmotionalData(newItem) {
 }
 
 export function removeEmotionalDataById(id) {
+    const item = data.find((item) => item.id === id);
     data = data.filter((item) => item.id !== id);
+    saveToStorage(data);
     console.log("EmotionalData after removal:", data);
+
+    if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("data-updated"));
+    }
+
+    // Return the removed item so we can apply its effect
+    return item;
+}
+
+export function clearEmotionalData() {
+    data = [];
+    saveToStorage(data);
+    console.log("EmotionalData cleared");
 
     if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("data-updated"));
@@ -28,6 +90,15 @@ export function generateInsights(emotion, time) {
     if (!emotion) return;
 
     const key = emotion.trim().toLowerCase();
+    // Use final metrics if available (from previous emotion), otherwise use base metrics (first emotion)
+    const finalMetrics = getFinalMetrics();
+    const startingMetrics = finalMetrics || getBaseMetrics();
+
+    // Clear final metrics after using them
+    if (finalMetrics) {
+        clearFinalMetrics();
+    }
+
     let newItem;
 
     if (key === "happy") {
@@ -35,11 +106,15 @@ export function generateInsights(emotion, time) {
             id: Date.now(),
             Time: time,
             Emotion: "Happy",
-            Views: 1200,
+            Video: "/images/HappBawl.mp4",
+            Views: startingMetrics.Views,
+            MessagesPerMinute: startingMetrics.MessagesPerMinute,
+            Followers: startingMetrics.Followers,
+            Subscribers: startingMetrics.Subscribers,
             Insights: {
-                Primary: { Emotion: "Happy", Metric: 57 },
-                Secondary: { Emotion: "Happy", Metric: 12 },
-                Teritary: { Emotion: "Happy", Metric: 15 },
+                Primary: { Emotion: "Joy", Metric: 57 },
+                Secondary: { Emotion: "Excited", Metric: 12 },
+                Teritary: { Emotion: "Intrigued", Metric: 15 },
             },
         };
     }
@@ -49,39 +124,50 @@ export function generateInsights(emotion, time) {
             id: Date.now(),
             Time: time,
             Emotion: "Sad",
-            Views: 980,
+            Video: "/images/SadBawl.mp4",
+            Views: startingMetrics.Views,
+            MessagesPerMinute: startingMetrics.MessagesPerMinute,
+            Followers: startingMetrics.Followers,
+            Subscribers: startingMetrics.Subscribers,
             Insights: {
                 Primary: { Emotion: "Sad", Metric: 62 },
-                Secondary: { Emotion: "Sad", Metric: 21 },
-                Teritary: { Emotion: "Sad", Metric: 17 },
+                Secondary: { Emotion: "Angst", Metric: 21 },
+                Teritary: { Emotion: "Fear", Metric: 17 },
             },
         };
     }
 
-    if (key === "excited") {
+    if (key === "anger-sad") {
         newItem = {
             id: Date.now(),
             Time: time,
-            Emotion: "Excited",
-            Views: 1420,
+            Video: "/images/AngerSad.mp4",
+            Emotion: "Anger - Sad",
+            Views: startingMetrics.Views,
+            MessagesPerMinute: startingMetrics.MessagesPerMinute,
+            Followers: startingMetrics.Followers,
+            Subscribers: startingMetrics.Subscribers,
             Insights: {
-                Primary: { Emotion: "Excited", Metric: 70 },
-                Secondary: { Emotion: "Excited", Metric: 18 },
-                Teritary: { Emotion: "Excited", Metric: 12 },
+                Primary: { Emotion: "Pissed", Metric: 70 },
+                Secondary: { Emotion: "Nervous", Metric: 18 },
+                Teritary: { Emotion: "Fearful", Metric: 12 },
             },
         };
     }
 
-    if (key === "angry") {
+    if (key === "idle") {
         newItem = {
             id: Date.now(),
             Time: time,
-            Emotion: "Angry",
-            Views: 860,
+            Emotion: "Idle",
+            Views: startingMetrics.Views,
+            MessagesPerMinute: startingMetrics.MessagesPerMinute,
+            Followers: startingMetrics.Followers,
+            Subscribers: startingMetrics.Subscribers,
             Insights: {
-                Primary: { Emotion: "Angry", Metric: 54 },
-                Secondary: { Emotion: "Angry", Metric: 29 },
-                Teritary: { Emotion: "Angry", Metric: 17 },
+                Primary: { Emotion: "Bored", Metric: 54 },
+                Secondary: { Emotion: "Neutral", Metric: 29 },
+                Teritary: { Emotion: "Curious", Metric: 17 },
             },
         };
     }

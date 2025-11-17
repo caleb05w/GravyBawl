@@ -2,7 +2,14 @@ function randomTag() {
     return Math.random() < 0.5 ? "Donations" : "Followers";
 }
 
-let notificationData = [
+// Get a random face image (face1 through face10)
+export function getRandomFace() {
+    const faceNumber = Math.floor(Math.random() * 12) + 1; // 1-10
+    return `/images/face${faceNumber}.png`;
+}
+
+// Pool of available notifications to randomly add
+const notificationPool = [
     {
         Img: "/images/face.png",
         Header: "New Follower",
@@ -12,7 +19,7 @@ let notificationData = [
     {
         Img: "/images/face.png",
         Header: "Donation",
-        Body: "Luna dropped $5 — “Keep up the great vibes!”",
+        Body: "Luna dropped $5 — \"Keep up the great vibes!\"",
         Tag: randomTag(),
     },
     {
@@ -66,7 +73,7 @@ let notificationData = [
     {
         Img: "/images/face.png",
         Header: "Chat Highlight",
-        Body: "“This stream is wild today!” – FroyoKing",
+        Body: "\"This stream is wild today!\" – FroyoKing",
         Tag: randomTag(),
     },
     {
@@ -84,7 +91,7 @@ let notificationData = [
     {
         Img: "/images/face.png",
         Header: "New Viewer",
-        Body: "LilPixel: “First time here, love the energy!”",
+        Body: "LilPixel: \"First time here, love the energy!\"",
         Tag: randomTag(),
     },
     {
@@ -108,7 +115,7 @@ let notificationData = [
     {
         Img: "/images/face.png",
         Header: "First-Time Chatter",
-        Body: "PixelRush: “Sup streamer!”",
+        Body: "PixelRush: \"Sup streamer!\"",
         Tag: randomTag(),
     },
     {
@@ -125,7 +132,63 @@ let notificationData = [
     },
 ];
 
+// Start with empty notification list
+let notificationData = [];
+
 export default notificationData;
+
+const STORAGE_KEY = "bawl-gravy-notifications";
+
+// Load from localStorage on initialization
+// Always start with empty array - notifications will be added automatically
+function loadFromStorage() {
+    // Always return empty array on initialization
+    // Notifications will be added automatically over time
+    if (typeof window !== "undefined") {
+        // Clear any existing notifications from localStorage to ensure fresh start
+        localStorage.removeItem(STORAGE_KEY);
+    }
+    return [];
+}
+
+// Get a random notification from the pool
+export function getRandomNotification() {
+    const randomIndex = Math.floor(Math.random() * notificationPool.length);
+    const baseNotification = notificationPool[randomIndex];
+    return {
+        ...baseNotification,
+        Tag: randomTag(),
+        Img: getRandomFace() // Randomize the face image
+    };
+}
+
+// Save to localStorage
+function saveToStorage(data) {
+    if (typeof window === "undefined") return;
+
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch (error) {
+        console.error("Error saving notifications to localStorage:", error);
+    }
+}
+
+// Initialize notificationData from storage
+notificationData = loadFromStorage();
+
+// Listen for storage changes from other tabs
+if (typeof window !== "undefined") {
+    window.addEventListener("storage", (e) => {
+        if (e.key === STORAGE_KEY && e.newValue !== null) {
+            try {
+                notificationData = JSON.parse(e.newValue);
+                window.dispatchEvent(new Event("notifications-updated"));
+            } catch (error) {
+                console.error("Error parsing notifications from storage event:", error);
+            }
+        }
+    });
+}
 
 export function fetchData() {
     return notificationData;
@@ -133,5 +196,22 @@ export function fetchData() {
 
 export function setData(data) {
     notificationData = data;
-    window.dispatchEvent(new Event("notifications-updated"));
+    saveToStorage(data);
+    if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("notifications-updated"));
+    }
+}
+
+// Add a random notification to the list
+export function addRandomNotification() {
+    const randomNotif = {
+        ...getRandomNotification(),
+        id: Date.now() + Math.random(), // Unique ID for tracking
+    };
+    notificationData = [randomNotif, ...notificationData];
+    saveToStorage(notificationData);
+    if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("notifications-updated"));
+    }
+    return randomNotif;
 }
