@@ -112,9 +112,9 @@ export function generateInsights(emotion, time) {
             Followers: startingMetrics.Followers,
             Subscribers: startingMetrics.Subscribers,
             Insights: {
-                Primary: { Emotion: "Joy", Metric: 57 },
-                Secondary: { Emotion: "Excited", Metric: 12 },
-                Teritary: { Emotion: "Intrigued", Metric: 15 },
+                Primary: { Emotion: "Joy", Metric: 57, Color: "#FBBF24" },
+                Secondary: { Emotion: "Excited", Metric: 12, Color: "#F97316" },
+                Teritary: { Emotion: "Intrigued", Metric: 15, Color: "#A855F7" },
             },
         };
     }
@@ -130,9 +130,9 @@ export function generateInsights(emotion, time) {
             Followers: startingMetrics.Followers,
             Subscribers: startingMetrics.Subscribers,
             Insights: {
-                Primary: { Emotion: "Sad", Metric: 62 },
-                Secondary: { Emotion: "Angst", Metric: 21 },
-                Teritary: { Emotion: "Fear", Metric: 17 },
+                Primary: { Emotion: "Sad", Metric: 62, Color: "#3B82F6" },
+                Secondary: { Emotion: "Angst", Metric: 21, Color: "#1E40AF" },
+                Teritary: { Emotion: "Fear", Metric: 17, Color: "#EF4444" },
             },
         };
     }
@@ -148,9 +148,9 @@ export function generateInsights(emotion, time) {
             Followers: startingMetrics.Followers,
             Subscribers: startingMetrics.Subscribers,
             Insights: {
-                Primary: { Emotion: "Pissed", Metric: 70 },
-                Secondary: { Emotion: "Nervous", Metric: 18 },
-                Teritary: { Emotion: "Fearful", Metric: 12 },
+                Primary: { Emotion: "Pissed", Metric: 70, Color: "#DC2626" },
+                Secondary: { Emotion: "Nervous", Metric: 18, Color: "#F59E0B" },
+                Teritary: { Emotion: "Fearful", Metric: 12, Color: "#991B1B" },
             },
         };
     }
@@ -165,9 +165,9 @@ export function generateInsights(emotion, time) {
             Followers: startingMetrics.Followers,
             Subscribers: startingMetrics.Subscribers,
             Insights: {
-                Primary: { Emotion: "Bored", Metric: 54 },
-                Secondary: { Emotion: "Neutral", Metric: 29 },
-                Teritary: { Emotion: "Curious", Metric: 17 },
+                Primary: { Emotion: "Bored", Metric: 54, Color: "#6B7280" },
+                Secondary: { Emotion: "Neutral", Metric: 29, Color: "#9CA3AF" },
+                Teritary: { Emotion: "Curious", Metric: 17, Color: "#10B981" },
             },
         };
     }

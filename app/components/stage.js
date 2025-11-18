@@ -35,14 +35,17 @@ export default function Stage({
         Primary: {
             Emotion: Insights?.Primary?.Emotion ?? "Primary",
             Metric: Insights?.Primary?.Metric ?? 0,
+            Color: Insights?.Primary?.Color ?? "#FFFFFF",
         },
         Secondary: {
             Emotion: Insights?.Secondary?.Emotion ?? "Secondary",
             Metric: Insights?.Secondary?.Metric ?? 0,
+            Color: Insights?.Secondary?.Color ?? "#FFFFFF",
         },
         Teritary: {
             Emotion: Insights?.Teritary?.Emotion ?? "Teritary",
             Metric: Insights?.Teritary?.Metric ?? 0,
+            Color: Insights?.Teritary?.Color ?? "#FFFFFF",
         },
     });
 
@@ -94,14 +97,17 @@ export default function Stage({
                         Primary: {
                             Emotion: Insights?.Primary?.Emotion ?? "Primary",
                             Metric: Insights?.Primary?.Metric ?? 0,
+                            Color: Insights?.Primary?.Color ?? "#FFFFFF",
                         },
                         Secondary: {
                             Emotion: Insights?.Secondary?.Emotion ?? "Secondary",
                             Metric: Insights?.Secondary?.Metric ?? 0,
+                            Color: Insights?.Secondary?.Color ?? "#FFFFFF",
                         },
                         Teritary: {
                             Emotion: Insights?.Teritary?.Emotion ?? "Teritary",
                             Metric: Insights?.Teritary?.Metric ?? 0,
+                            Color: Insights?.Teritary?.Color ?? "#FFFFFF",
                         },
                     });
                 }, 0);
@@ -209,14 +215,17 @@ export default function Stage({
                     Primary: {
                         ...prev.Primary,
                         Metric: fluctuateMetric(prev.Primary.Metric),
+                        Color: prev.Primary.Color,
                     },
                     Secondary: {
                         ...prev.Secondary,
                         Metric: fluctuateMetric(prev.Secondary.Metric),
+                        Color: prev.Secondary.Color,
                     },
                     Teritary: {
                         ...prev.Teritary,
                         Metric: fluctuateMetric(prev.Teritary.Metric),
+                        Color: prev.Teritary.Color,
                     },
                 };
             });
@@ -267,7 +276,7 @@ export default function Stage({
     const placeholderVideo = Video ?? "/images/Idle-Loop.mp4";
 
     return (
-        <div className={`rounded-[12px] gap-[24px] flex flex-col w-[600px] h-fit bg-[#100F0F] pb-[24px] ${isInitializing ? 'stage-initialize' : ''}`}>
+        <div className={`rounded-[12px] gap-[24px] flex flex-col w-[600px] h-fit bg-[#0c0c0c] pb-[24px] ${isInitializing ? 'stage-initialize' : ''}`}>
             <div className={`flex flex-row justify-between align-middle items-center h-fit w-full px-[24px] pt-[24px] ${isInitializing ? 'stage-header' : ''}`}>
                 <div className="flex flex-row gap-[8px]">
                     <button className="rounded-full bg-red-500 w-[12px] h-[12px]"></button>
@@ -279,8 +288,8 @@ export default function Stage({
                     <FaExpandAlt className='text-white' />
                 </div>
             </div>
-            <div className=" border-[0.5px] border-[#656567]"></div>
-            <div className={`flex flex-row w-auto h-[20rem] justify-center px-[16px] ${isInitializing ? 'stage-video' : 'stage-video-default'}`} style={!isInitializing ? { transform: 'scale(0.7)' } : {}}>
+            <div className=" border-[0.5px] border-white/10"></div>
+            <div className={`flex flex-row w-auto h-[20rem] justify-center px-[16px] ${isInitializing ? 'stage-video' : 'stage-video-default'}`}>
                 <video
                     key={placeholderVideo || "placeholder"}
                     className="max-w-[50%] max-h-hug object-cover"
@@ -296,27 +305,40 @@ export default function Stage({
                 </video>
             </div>
 
-            <div className="flex flex-row min-w-full gap-[12px] justify-center">
-                <div className={`flex flex-row justify-between text-white gap-[12px] border px-[12px] py-[2px] rounded-full border-[#343434] bg-gradient-to-b from-[#1A1A1A] to-[#343434] ${isInitializing ? 'stage-insight-1' : ''}`}>
-                    <span>
+            <div className="flex flex-row flex-wrap min-w-full gap-[12px] justify-center items-center px-[16px]">
+                <div className={`flex flex-row justify-between items-center text-white gap-[12px] px-[12px] py-[2px] ${isInitializing ? 'stage-insight-1' : ''}`}>
+                    <span className="flex flex-row items-center gap-[8px]">
+                        <div
+                            className="rounded-full w-[8px] h-[8px]"
+                            style={{ backgroundColor: fluctuatingInsights.Primary.Color }}
+                        ></div>
                         <h5> {fluctuatingInsights.Primary.Emotion} </h5>
                     </span>
                     <span>
                         <h5>{fluctuatingInsights.Primary.Metric.toFixed(1)}%</h5>
                     </span>
                 </div>
+                <span className='text-white border border-white/10 h-[20px] w-px self-center hidden sm:block'></span>
 
-                <div className={`flex flex-row justify-between text-white gap-[12px] border px-[12px] py-[2px] rounded-full border-[#343434] bg-gradient-to-b from-[#1A1A1A] to-[#343434] ${isInitializing ? 'stage-insight-2' : ''}`}>
-                    <span>
+                <div className={`flex flex-row justify-between items-center text-white gap-[12px] px-[12px] py-[2px] ${isInitializing ? 'stage-insight-2' : ''}`}>
+                    <span className="flex flex-row items-center gap-[8px]">
+                        <div
+                            className="rounded-full w-[8px] h-[8px]"
+                            style={{ backgroundColor: fluctuatingInsights.Secondary.Color }}
+                        ></div>
                         <h5>{fluctuatingInsights.Secondary.Emotion}</h5>
                     </span>
                     <span>
                         <h5>{fluctuatingInsights.Secondary.Metric.toFixed(1)}%</h5>
                     </span>
                 </div>
-
-                <div className={`flex flex-row justify-between text-white gap-[12px] border px-[12px] py-[2px] rounded-full border-[#343434] bg-gradient-to-b from-[#1A1A1A] to-[#343434] ${isInitializing ? 'stage-insight-3' : ''}`}>
-                    <span>
+                <span className='text-white border border-white/10 h-[20px] w-px self-center hidden sm:block'></span>
+                <div className={`flex flex-row justify-between items-center text-white gap-[12px] px-[12px] py-[2px] ${isInitializing ? 'stage-insight-3' : ''}`}>
+                    <span className="flex flex-row items-center gap-[8px]">
+                        <div
+                            className="rounded-full w-[8px] h-[8px]"
+                            style={{ backgroundColor: fluctuatingInsights.Teritary.Color }}
+                        ></div>
                         <h5>{fluctuatingInsights.Teritary.Emotion}</h5>
                     </span>
                     <span>
@@ -327,7 +349,7 @@ export default function Stage({
 
             <div className="flex flex-col gap-[12px] w-full px-[16px]">
                 <div className="flex flex-row gap-[8px]">
-                    <div className={`flex flex-col items-center justify-center w-full h-[120px] p-[2px] rounded-xl border border-[#515151] backdrop-blur-md ${isInitializing ? 'stage-metric-1' : ''}`}>
+                    <div className={`flex flex-col items-center justify-center w-full h-[120px] p-[2px] rounded-xl border border-white/10 backdrop-blur-md ${isInitializing ? 'stage-metric-1' : ''}`}>
                         <div className="rounded-xl bg-[#101010]/30 backdrop-blur-sm p-4 w-full">
                             <div className="flex flex-col items-center justify-center text-center">
                                 <h2 className="text-white text-xl font-semibold">
@@ -367,8 +389,8 @@ export default function Stage({
                             </div>
                         </div>
                     </div>
-                    <div className={`flex flex-col items-center justify-center w-full h-[120px] p-[2px] rounded-xl border border-[#515151] backdrop-blur-md ${isInitializing ? 'stage-metric-2' : ''}`}>
-                        <div className="rounded-xl bg-[#101010]/30 backdrop-blur-sm p-4 w-full">
+                    <div className={`flex flex-col items-center justify-center w-full h-[120px] p-[2px] rounded-xl border border-white/10 backdrop-blur-md ${isInitializing ? 'stage-metric-2' : ''}`}>
+                        <div className="rounded-xl bg-[#0C0C0C]/30 backdrop-blur-sm p-4 w-full">
                             <div className="flex flex-col items-center justify-center text-center">
                                 <h2 className="text-white text-xl font-semibold">
                                     {fluctuatingMessagesPerMinute}
@@ -379,7 +401,7 @@ export default function Stage({
                     </div>
                 </div>
                 <div className="flex flex-row gap-[8px]">
-                    <div className={`flex flex-col items-center justify-center w-full h-[120px] p-[2px] rounded-xl border border-[#515151] backdrop-blur-md ${isInitializing ? 'stage-metric-3' : ''}`}>
+                    <div className={`flex flex-col items-center justify-center w-full h-[120px] p-[2px] rounded-xl border border-white/10 backdrop-blur-md ${isInitializing ? 'stage-metric-3' : ''}`}>
                         <div className="rounded-xl bg-[#101010]/30 backdrop-blur-sm p-4 w-full">
                             <div className="flex flex-col items-center justify-center text-center">
                                 <h2 className="text-white text-xl font-semibold">
@@ -389,7 +411,7 @@ export default function Stage({
                             </div>
                         </div>
                     </div>
-                    <div className={`flex flex-col items-center justify-center w-full h-[120px] p-[2px] rounded-xl border border-[#515151] backdrop-blur-md ${isInitializing ? 'stage-metric-4' : ''}`}>
+                    <div className={`flex flex-col items-center justify-center w-full h-[120px] p-[2px] rounded-xl border border-white/10 backdrop-blur-md ${isInitializing ? 'stage-metric-4' : ''}`}>
                         <div className="rounded-xl bg-[#101010]/30 backdrop-blur-sm p-4 w-full">
                             <div className="flex flex-col items-center justify-center text-center">
                                 <h2 className="text-white text-xl font-semibold">
